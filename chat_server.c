@@ -12,10 +12,27 @@ int main(){
         connfd=accept_client(sockfd,client_addr,client_len);
 
     while(1){
-
-        //中间测试是否能够连接成功,先不使用结构体
+        printf("进入。。。。。\n");
+ 
         memset(str,0,MAX_MESSAGE_LENGTH);
         int read_count=read(connfd,str,MAX_MESSAGE_LENGTH);
+        printf("recive message: ");
+        DATA dataee;
+        memcpy(&dataee,str,sizeof(dataee));
+        for (int i = 0; i < 5; i++)
+        {
+            dataee.status[i]=ntohl(dataee.status[i]);
+            /* code */
+        }
+        printf("dataee.status[0] %d\n",dataee.status[0]);
+        printf("dataee.status[1] %d\n",dataee.status[1]);
+        printf("dataee.status[2] %d\n",dataee.status[2]);
+        printf("dataee.status[3] %d\n",dataee.status[3]);
+        printf("dataee.status[4] %d\n",dataee.status[4]);
+        
+        printf("message ============== %s\n",dataee.message);
+        printf("username ============== %s\n",dataee.username);
+        printf("passwd ============== %s\n",dataee.passwd);
         if(read_count==0){
             write_Log("客户端离开\n");
             exit(-1);
@@ -43,8 +60,8 @@ int main(){
         //向客户端发送消息
         cover_stream_From_Linux_To_Windows(data,send_msg);
 
-        int len=write(connfd,send_msg,sizeof(data.status) + sizeof(data.message) + sizeof(data.username) + sizeof(data.passwd));
-        //int len=write_Client(connfd,send_msg,LENGTH);
+        //int len=write(connfd,send_msg,sizeof(data.status) + sizeof(data.message) + sizeof(data.username) + sizeof(data.passwd));
+        int len=write_Client(connfd,send_msg,LENGTH);
         if(len<0){
             write_Log("发送数据失败\n");
             exit(SERVER_ERR);

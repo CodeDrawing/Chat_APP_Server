@@ -80,3 +80,6 @@ char *cover_stream_From_Linux_To_Windows(DATA data,char * send_msg){
 int write_Client(int connfd,char *send_msg,int len){
     return write(connfd,send_msg,len);
 }
+DATA cover_stream_From_Windows_To_Linux(char *recv_msg){
+    
+}
