@@ -18,11 +18,16 @@ char *cover_stream_From_Linux_To_Windows(DATA data,char * send_msg);
 /**
  * 发送数据到客户端，没有写入的数据个数，需要send_mes和connfd
 */
-int write_Client(int connfd,char *send_msg,int len);
+void write_Client(int connfd,char *send_msg,int len);
 
 /**
- * 将客户端发送过来的数据转化为Linux上的字节流
- * 返回一个结构体，根据传入的字符串
+ * 将客户端发送过来的数据转化为Linux上的字节流,并存入到DATA结构体中
+ * 
 */
-DATA cover_stream_From_Windows_To_Linux(char *recv_msg);
+void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data);
+
+/**
+ * 测试收到的DATA数据
+*/
+void test_Recive_Data_From_Client(DATA recive_Data);
 #endif

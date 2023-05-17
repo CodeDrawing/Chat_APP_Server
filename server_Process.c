@@ -75,11 +75,41 @@ char *cover_stream_From_Linux_To_Windows(DATA data,char * send_msg){
         ptr += sizeof(data.passwd);
 
     return send_msg;
+
 }
 
-int write_Client(int connfd,char *send_msg,int len){
-    return write(connfd,send_msg,len);
+void write_Client(int connfd,char *send_msg,int len){
+     int write_Len=write(connfd,send_msg,len);
+     if(write_Len<0){
+            write_Log("发送数据失败\n");
+            exit(SERVER_ERR);
+        }else{
+            write_Log("发送数据成功\n");
+    }
 }
-DATA cover_stream_From_Windows_To_Linux(char *recv_msg){
-    
+void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data){
+    int recive_Data_Size=sizeof(*recive_Data);
+    int read_count=read(connfd,recv_msg,recive_Data_Size);
+    if(read_count==0){
+        write_Log("客户端离开\n");
+        exit(-1);
+    }
+    memcpy(recive_Data,recv_msg,recive_Data_Size);
+    for (int i = 0; i < 5; i++)
+    {
+        recive_Data->status[i]=ntohl(recive_Data->status[i]);
+        /* code */
+    }
+}
+
+void test_Recive_Data_From_Client(DATA recive_Data){
+        printf("recive_Data.status[0] %d\n",recive_Data.status[0]);
+        printf("recive_Data.status[1] %d\n",recive_Data.status[1]);
+        printf("recive_Data.status[2] %d\n",recive_Data.status[2]);
+        printf("recive_Data.status[3] %d\n",recive_Data.status[3]);
+        printf("recive_Data.status[4] %d\n",recive_Data.status[4]);
+        
+        printf("message ============== %s\n",recive_Data.message);
+        printf("username ============== %s\n",recive_Data.username);
+        printf("passwd ============== %s\n",recive_Data.passwd);
 }
