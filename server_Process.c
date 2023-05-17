@@ -1,4 +1,5 @@
 #include "server_Process.h"
+
 /***
  * 返回sockfd
 */
@@ -33,7 +34,7 @@ int start_server(){
     
 }
 
-int accept_client(int sockfd,struct sockaddr_in client_addr,int client_len){
+int accept_client(int sockfd,struct sockaddr_in client_addr,int client_len,Node *net_Node){
     int connfd=accept(sockfd,(struct sockaddr*)&client_addr,&client_len);
     if(connfd<0){
         write_Log("服务器同意连接失败\n");
@@ -41,12 +42,14 @@ int accept_client(int sockfd,struct sockaddr_in client_addr,int client_len){
     }else{
         char str[128];
         sprintf(str,"服务器连接成功，来自IP: %s",inet_ntoa(client_addr.sin_addr));
+        addNode(&net_Node,inet_ntoa(client_addr.sin_addr),client_addr.sin_port);
+        printList(net_Node);
         write_Log(str);
     }
     return connfd;
 }
 char *cover_stream_From_Linux_To_Windows(DATA data,char * send_msg){
-    uint32_t status_0=htonl(data.status[0]);
+        uint32_t status_0=htonl(data.status[0]);
         uint32_t status_1=htonl(data.status[1]);
         uint32_t status_2=htonl(data.status[2]);
         uint32_t status_3=htonl(data.status[3]);
@@ -55,7 +58,6 @@ char *cover_stream_From_Linux_To_Windows(DATA data,char * send_msg){
 
 //        char send_mes[sizeof(data.status)+sizeof(data.message)+sizeof(data.username)+sizeof(data.passwd)];
         memset(send_msg,0,sizeof(send_msg));
-  
         char *ptr = send_msg;
         memcpy(ptr, &status_0, sizeof(status_0));
         ptr += sizeof(status_0);
@@ -73,9 +75,7 @@ char *cover_stream_From_Linux_To_Windows(DATA data,char * send_msg){
         ptr += sizeof(data.username);
         memcpy(ptr, data.passwd, sizeof(data.passwd));
         ptr += sizeof(data.passwd);
-
     return send_msg;
-
 }
 
 void write_Client(int connfd,char *send_msg,int len){
