@@ -42,7 +42,7 @@ int accept_client(int sockfd,struct sockaddr_in client_addr,int client_len,Node 
     }else{
         char str[128];
         sprintf(str,"服务器连接成功，来自IP: %s",inet_ntoa(client_addr.sin_addr));
-        addNode(&net_Node,inet_ntoa(client_addr.sin_addr),client_addr.sin_port);
+        addNode(&net_Node,inet_ntoa(client_addr.sin_addr),client_addr.sin_port,connfd);
         printList(net_Node);
         write_Log(str);
     }
@@ -54,8 +54,6 @@ char *cover_stream_From_Linux_To_Windows(DATA data,char * send_msg){
         uint32_t status_2=htonl(data.status[2]);
         uint32_t status_3=htonl(data.status[3]);
         uint32_t status_4=htonl(data.status[4]);
-
-
 //        char send_mes[sizeof(data.status)+sizeof(data.message)+sizeof(data.username)+sizeof(data.passwd)];
         memset(send_msg,0,sizeof(send_msg));
         char *ptr = send_msg;
@@ -87,12 +85,13 @@ void write_Client(int connfd,char *send_msg,int len){
             write_Log("发送数据成功\n");
     }
 }
-void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data){
+void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data,Node *net_Node){
     int recive_Data_Size=sizeof(*recive_Data);
-    int read_count=read(connfd,recv_msg,recive_Data_Size);
+    int read_count=recv(connfd,recv_msg,recive_Data_Size,0);
     if(read_count==0){
+        printf("客户端断开连接\n");
+        printList(net_Node);
         write_Log("客户端离开\n");
-        exit(-1);
     }
     memcpy(recive_Data,recv_msg,recive_Data_Size);
     for (int i = 0; i < 5; i++)

@@ -25,7 +25,7 @@ void write_Client(int connfd,char *send_msg,int len);
  * 将客户端发送过来的数据转化为Linux上的字节流,并存入到DATA结构体中
  * 
 */
-void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data);
+void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data,Node *net_Node);
 
 /**
  * 测试收到的DATA数据
