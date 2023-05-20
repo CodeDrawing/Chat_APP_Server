@@ -75,12 +75,21 @@
 #define LOG_WRITE_SUCCESS 81
 #define LOG_WRITE_FAIL 82
 
-
+#define IP_SIZE 16
+// 定义链表节点
+typedef struct Node {
+    char ip[IP_SIZE];  // IP地址
+    int port;  // 端口号
+    int connfd;  // 连接文件描述符
+    struct Node* next;  // 指向下一个节点
+} Node;
+Node *net_Node;
 typedef  char USERNAME[30];
 typedef char PASSWD[30];
 typedef char MSG[MAX_MESSAGE_LENGTH];
 typedef int STATUS;
 typedef char *LOG_MESSAGE;
+
 
 
 
@@ -90,4 +99,6 @@ typedef struct sendMessage{
   USERNAME username;
   PASSWD passwd;
 }DATA;
+
+
 #endif

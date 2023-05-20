@@ -1,5 +1,6 @@
 #include "server_Node.h"
 
+extern Node *net_Node;
 
 // 创建新节点
 Node* createNode(const char* ip, int port, int connfd) {
@@ -20,13 +21,13 @@ Node* createNode(const char* ip, int port, int connfd) {
 // 添加新节点到链表
 void addNode(Node** head, const char* ip, int port, int connfd) {
     Node* newNode = createNode(ip, port, connfd);
-    newNode->next = *head;
-    *head = newNode;
+    newNode->next = net_Node;
+    net_Node = newNode;
 }
 
 // 删除具有特定connfd的节点
 void deleteNodeByConnfd(Node** head, int connfd) {
-    Node* temp = *head, *prev;
+    Node* temp = net_Node, *prev;
 
     // 如果头节点本身就持有要删除的 connfd
     if (temp != NULL && temp->connfd == connfd) {
@@ -51,8 +52,8 @@ void deleteNodeByConnfd(Node** head, int connfd) {
 }
 
 // 打印链表
-void printList(Node* head) {
-    Node* temp = head;
+void printList() {
+    Node* temp = net_Node;
     while (temp != NULL) {
         printf("IP: %s, Port: %d, Connfd: %d\n", temp->ip, temp->port, temp->connfd);
         temp = temp->next;
@@ -60,8 +61,8 @@ void printList(Node* head) {
 }
 
 // 删除链表
-void deleteList(Node** head) {
-    Node* current = *head;
+void deleteList() {
+    Node* current = net_Node;
     Node* next;
 
     while (current != NULL) {
@@ -70,5 +71,5 @@ void deleteList(Node** head) {
         current = next;
     }
 
-    *head = NULL;
+    net_Node = NULL;
 }
