@@ -25,7 +25,7 @@ void write_Client(int connfd,char *send_msg,int len);
  * 将客户端发送过来的数据转化为Linux上的字节流,并存入到DATA结构体中
  * 
 */
-void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data);
+void read_Data_From_Client(int connfd,char* recv_msg,DATA *recive_Data,int epfd,int i);
 
 /**
  * 测试收到的DATA数据
@@ -34,5 +34,5 @@ void test_Recive_Data_From_Client(DATA recive_Data);
 /**
  * 收到群发消息，就走次函数，遍历所有链表，并发送数据。
 */
-void forward_Message_To_All_Online_User(DATA data);
+void forward_Message_To_All_Online_User(int connfd,DATA data);
 #endif

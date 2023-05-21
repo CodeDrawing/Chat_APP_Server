@@ -19,19 +19,19 @@ Node* createNode(const char* ip, int port, int connfd) {
 }
 
 // 添加新节点到链表
-void addNode(Node** head, const char* ip, int port, int connfd) {
+void addNode( const char* ip, int port, int connfd) {
     Node* newNode = createNode(ip, port, connfd);
     newNode->next = net_Node;
     net_Node = newNode;
 }
 
 // 删除具有特定connfd的节点
-void deleteNodeByConnfd(Node** head, int connfd) {
+void deleteNodeByConnfd( int connfd) {
     Node* temp = net_Node, *prev;
 
     // 如果头节点本身就持有要删除的 connfd
     if (temp != NULL && temp->connfd == connfd) {
-        *head = temp->next;
+        net_Node = temp->next;
         free(temp);
         return;
     }

@@ -11,10 +11,10 @@
 Node* createNode(const char* ip, int port, int connfd);
 
 // 添加新节点到链表
-void addNode(Node** head, const char* ip, int port, int connfd);
+void addNode( const char* ip, int port, int connfd);
 
 // 删除具有特定connfd的节点
-void deleteNodeByConnfd(Node** head, int connfd);
+void deleteNodeByConnfd(int connfd);
 
 // 打印链表
 void printList();

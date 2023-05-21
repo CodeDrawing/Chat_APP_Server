@@ -32,7 +32,7 @@ int main(){
         while(1){
             
             printList(net_Node);
-            resp_Epoll_Num=epoll_wait(epfd,epfds,epfd_Pos+1,30000);
+            resp_Epoll_Num=epoll_wait(epfd,epfds,epfd_Pos+1,300000);
             for(int i=0;i<resp_Epoll_Num;i++){
                     if(epfds[i].data.fd==sockfd){
                         //响应的文件描述符是sockfd，说明是客户端连接过来了
@@ -45,9 +45,9 @@ int main(){
                     }else{
                         DATA recive_Data;
                         memset(str,0,LENGTH);
-
-                        read_Data_From_Client( epfds[i].data.fd,str,&recive_Data);
-                        test_Recive_Data_From_Client(recive_Data);
+                        read_Data_From_Client( epfds[i].data.fd,str,&recive_Data,epfd,i);
+                        printf("收到了客户端的消息。。。。。。。。。。。\n");
+                        //test_Recive_Data_From_Client(recive_Data);
 
                         //发送字节序
 
@@ -64,7 +64,7 @@ int main(){
                         char send_msg[LENGTH];
                         //向客户端发送消息
                         //cover_stream_From_Linux_To_Windows(recive_Data,send_msg);
-                        forward_Message_To_All_Online_User(recive_Data);
+                        forward_Message_To_All_Online_User(epfds[i].data.fd,recive_Data);
                         //int len=write(connfd,send_msg,sizeof(data.status) + sizeof(data.message) + sizeof(data.username) + sizeof(data.passwd));
                         //write_Client(epfds[i].data.fd,send_msg,LENGTH);
                     }
